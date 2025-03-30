@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/custom-ui/Card';
+import { Button } from '@/components/custom-ui/Button';
+import { Input } from '@/components/custom-ui/Input';
+import { Badge } from '@/components/custom-ui/Badge';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/custom-ui/Select';
 import { Search, Filter, ArrowRight } from 'lucide-react';
 
 const mockCases = [
@@ -67,6 +65,7 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState('public');
   
   const filteredCases = mockCases.filter(caseItem => {
     const matchesSearch = caseItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -83,7 +82,7 @@ const Index = () => {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
           <div>
             <h1 className="text-3xl font-bold text-navy-600">Case Analyzer Collective</h1>
-            <p className="text-muted-foreground">Search, analyze, and collaborate on legal cases</p>
+            <p className="text-gray-500">Search, analyze, and collaborate on legal cases</p>
           </div>
           <div className="flex gap-2">
             <Link to="/upload">
@@ -95,135 +94,166 @@ const Index = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="public" className="mb-8">
-          <TabsList>
-            <TabsTrigger value="public">Public Cases</TabsTrigger>
-            <TabsTrigger value="my-cases">My Cases</TabsTrigger>
-            <TabsTrigger value="shared">Shared With Me</TabsTrigger>
-          </TabsList>
+        <div className="mb-8">
+          <div className="flex border-b border-gray-200">
+            <button 
+              onClick={() => setActiveTab('public')}
+              className={`px-4 py-2 font-medium text-sm ${
+                activeTab === 'public' 
+                  ? 'text-blue-600 border-b-2 border-blue-600' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Public Cases
+            </button>
+            <button 
+              onClick={() => setActiveTab('my-cases')}
+              className={`px-4 py-2 font-medium text-sm ${
+                activeTab === 'my-cases' 
+                  ? 'text-blue-600 border-b-2 border-blue-600' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              My Cases
+            </button>
+            <button 
+              onClick={() => setActiveTab('shared')}
+              className={`px-4 py-2 font-medium text-sm ${
+                activeTab === 'shared' 
+                  ? 'text-blue-600 border-b-2 border-blue-600' 
+                  : 'text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              Shared With Me
+            </button>
+          </div>
           
-          <TabsContent value="public" className="space-y-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Search Public Cases</CardTitle>
-                <CardDescription>Browse through publicly available case documents and analysis</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex flex-col md:flex-row gap-4">
-                  <div className="relative flex-1">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      type="search"
-                      placeholder="Search cases..."
-                      className="pl-8"
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  
-                  <div className="flex gap-2">
-                    <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Categories</SelectItem>
-                        <SelectItem value="Criminal">Criminal</SelectItem>
-                        <SelectItem value="Corporate">Corporate</SelectItem>
-                        <SelectItem value="Family">Family</SelectItem>
-                        <SelectItem value="Municipal">Municipal</SelectItem>
-                        <SelectItem value="Medical">Medical</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    <Select value={statusFilter} onValueChange={setStatusFilter}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="all">All Statuses</SelectItem>
-                        <SelectItem value="Ongoing">Ongoing</SelectItem>
-                        <SelectItem value="Closed">Closed</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    
-                    <Button variant="outline" size="icon">
-                      <Filter className="h-4 w-4" />
-                    </Button>
-                  </div>
+          <div className="mt-6">
+            {activeTab === 'public' && (
+              <div className="space-y-6">
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Search Public Cases</CardTitle>
+                    <CardDescription>Browse through publicly available case documents and analysis</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="flex flex-col md:flex-row gap-4">
+                      <div className="relative flex-1">
+                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
+                        <Input
+                          type="search"
+                          placeholder="Search cases..."
+                          className="pl-8"
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
+                      
+                      <div className="flex gap-2">
+                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Category" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Categories</SelectItem>
+                            <SelectItem value="Criminal">Criminal</SelectItem>
+                            <SelectItem value="Corporate">Corporate</SelectItem>
+                            <SelectItem value="Family">Family</SelectItem>
+                            <SelectItem value="Municipal">Municipal</SelectItem>
+                            <SelectItem value="Medical">Medical</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        
+                        <Select value={statusFilter} onValueChange={setStatusFilter}>
+                          <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Status" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="all">All Statuses</SelectItem>
+                            <SelectItem value="Ongoing">Ongoing</SelectItem>
+                            <SelectItem value="Closed">Closed</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        
+                        <Button variant="outline" size="icon">
+                          <Filter className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {filteredCases.map((caseItem) => (
+                    <Link to={`/cases/${caseItem.id}`} key={caseItem.id}>
+                      <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+                        <CardHeader>
+                          <div className="flex justify-between">
+                            <Badge variant={caseItem.status === 'Ongoing' ? 'default' : 'secondary'}>
+                              {caseItem.status}
+                            </Badge>
+                            <span className="text-sm text-muted-foreground">{caseItem.date}</span>
+                          </div>
+                          <CardTitle className="mt-2">{caseItem.title}</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <p className="text-sm text-muted-foreground line-clamp-3">{caseItem.summary}</p>
+                          <div className="flex flex-wrap gap-1 mt-3">
+                            {caseItem.tags.map((tag, i) => (
+                              <Badge key={i} variant="outline" className="text-xs">
+                                {tag}
+                              </Badge>
+                            ))}
+                          </div>
+                        </CardContent>
+                        <CardFooter className="flex justify-between border-t pt-4 text-sm">
+                          <div className="flex items-center gap-1">
+                            <span className={`inline-block w-3 h-3 rounded-full ${
+                              caseItem.confidenceScore > 90 ? 'bg-green-500' : 
+                              caseItem.confidenceScore > 80 ? 'bg-yellow-500' : 'bg-red-500'
+                            }`}></span>
+                            <span>AI Confidence: {caseItem.confidenceScore}%</span>
+                          </div>
+                          <span className="flex items-center">
+                            View Case <ArrowRight className="ml-1 h-4 w-4" />
+                          </span>
+                        </CardFooter>
+                      </Card>
+                    </Link>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {filteredCases.map((caseItem) => (
-                <Link to={`/cases/${caseItem.id}`} key={caseItem.id}>
-                  <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
-                    <CardHeader>
-                      <div className="flex justify-between">
-                        <Badge variant={caseItem.status === 'Ongoing' ? 'default' : 'secondary'}>
-                          {caseItem.status}
-                        </Badge>
-                        <span className="text-sm text-muted-foreground">{caseItem.date}</span>
-                      </div>
-                      <CardTitle className="mt-2">{caseItem.title}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-sm text-muted-foreground line-clamp-3">{caseItem.summary}</p>
-                      <div className="flex flex-wrap gap-1 mt-3">
-                        {caseItem.tags.map((tag, i) => (
-                          <Badge key={i} variant="outline" className="text-xs">
-                            {tag}
-                          </Badge>
-                        ))}
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-between border-t pt-4 text-sm">
-                      <div className="flex items-center gap-1">
-                        <span className={`inline-block w-3 h-3 rounded-full ${
-                          caseItem.confidenceScore > 90 ? 'bg-green-500' : 
-                          caseItem.confidenceScore > 80 ? 'bg-yellow-500' : 'bg-red-500'
-                        }`}></span>
-                        <span>AI Confidence: {caseItem.confidenceScore}%</span>
-                      </div>
-                      <span className="flex items-center">
-                        View Case <ArrowRight className="ml-1 h-4 w-4" />
-                      </span>
-                    </CardFooter>
-                  </Card>
-                </Link>
-              ))}
-            </div>
-            
-            {filteredCases.length === 0 && (
-              <div className="text-center py-10">
-                <p className="text-muted-foreground">No cases found matching your search criteria.</p>
+                
+                {filteredCases.length === 0 && (
+                  <div className="text-center py-10">
+                    <p className="text-gray-500">No cases found matching your search criteria.</p>
+                  </div>
+                )}
               </div>
             )}
-          </TabsContent>
-          
-          <TabsContent value="my-cases">
-            <Card className="flex items-center justify-center h-64">
-              <CardContent className="text-center">
-                <p className="text-muted-foreground mb-4">You need to log in to view your cases</p>
-                <Link to="/auth">
-                  <Button>Log In</Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </TabsContent>
-          
-          <TabsContent value="shared">
-            <Card className="flex items-center justify-center h-64">
-              <CardContent className="text-center">
-                <p className="text-muted-foreground mb-4">You need to log in to view shared cases</p>
-                <Link to="/auth">
-                  <Button>Log In</Button>
-                </Link>
-              </CardContent>
-            </Card>
-          </TabsContent>
-        </Tabs>
+            
+            {activeTab === 'my-cases' && (
+              <Card className="flex items-center justify-center h-64">
+                <CardContent className="text-center">
+                  <p className="text-gray-500 mb-4">You need to log in to view your cases</p>
+                  <Link to="/auth">
+                    <Button>Log In</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
+            
+            {activeTab === 'shared' && (
+              <Card className="flex items-center justify-center h-64">
+                <CardContent className="text-center">
+                  <p className="text-gray-500 mb-4">You need to log in to view shared cases</p>
+                  <Link to="/auth">
+                    <Button>Log In</Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+        </div>
         
         <div className="space-y-6">
           <h2 className="text-2xl font-bold">Featured Analysis</h2>

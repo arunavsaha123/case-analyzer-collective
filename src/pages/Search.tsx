@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Slider } from '@/components/ui/slider';
-import { Label } from '@/components/ui/label';
-import { Separator } from '@/components/ui/separator';
-import { ArrowRight, ChevronDown, ChevronUp, Search as SearchIcon, Calendar, Filter, SlidersHorizontal, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { MainLayout } from '@/components/layout/MainLayout';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/custom-ui/Card';
+import { Button } from '@/components/custom-ui/Button';
+import { Input } from '@/components/custom-ui/Input';
+import { Badge } from '@/components/custom-ui/Badge';
+import { Checkbox } from '@/components/custom-ui/Checkbox';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/custom-ui/Select';
+import { Slider } from '@/components/custom-ui/Slider';
+import { Label } from '@/components/custom-ui/Label';
+import { Separator } from '@/components/custom-ui/Separator';
+import { ArrowRight, ChevronDown, ChevronUp, Search as SearchIcon, Calendar, Filter, SlidersHorizontal, XCircle } from 'lucide-react';
 
 // Mock data
 const mockCases = [
@@ -110,7 +110,6 @@ const Search = () => {
   const [sortOption, setSortOption] = useState('relevance');
   const [showFilters, setShowFilters] = useState(false);
   
-  // Function to handle category checkbox changes
   const handleCategoryChange = (category: string) => {
     setSelectedCategories(prev => {
       if (prev.includes(category)) {
@@ -121,7 +120,6 @@ const Search = () => {
     });
   };
   
-  // Function to handle status checkbox changes
   const handleStatusChange = (status: string) => {
     setSelectedStatuses(prev => {
       if (prev.includes(status)) {
@@ -132,7 +130,6 @@ const Search = () => {
     });
   };
   
-  // Function to handle tag checkbox changes
   const handleTagChange = (tag: string) => {
     setSelectedTags(prev => {
       if (prev.includes(tag)) {
@@ -143,31 +140,24 @@ const Search = () => {
     });
   };
   
-  // Function to filter cases
   const filteredCases = mockCases.filter(caseItem => {
-    // Search term filter
     const matchesSearch = searchTerm === '' || 
       caseItem.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
       caseItem.summary.toLowerCase().includes(searchTerm.toLowerCase());
     
-    // Category filter
     const matchesCategory = selectedCategories.length === 0 || 
       selectedCategories.includes(caseItem.category);
     
-    // Status filter
     const matchesStatus = selectedStatuses.length === 0 || 
       selectedStatuses.includes(caseItem.status);
     
-    // Tag filter
     const matchesTags = selectedTags.length === 0 || 
       caseItem.tags.some(tag => selectedTags.includes(tag));
     
-    // Confidence score filter
     const matchesConfidence = 
       caseItem.confidenceScore >= confidenceRange[0] && 
       caseItem.confidenceScore <= confidenceRange[1];
     
-    // Date filter
     const caseDate = new Date(caseItem.date);
     const startDate = dateRange.start ? new Date(dateRange.start) : null;
     const endDate = dateRange.end ? new Date(dateRange.end) : null;
@@ -179,7 +169,6 @@ const Search = () => {
            matchesConfidence && matchesStartDate && matchesEndDate;
   });
   
-  // Sort cases based on selected option
   const sortedCases = [...filteredCases].sort((a, b) => {
     switch(sortOption) {
       case 'date-newest':
@@ -192,12 +181,10 @@ const Search = () => {
         return a.confidenceScore - b.confidenceScore;
       case 'relevance':
       default:
-        // Default relevance sort (by title for mock data)
         return a.title.localeCompare(b.title);
     }
   });
   
-  // Function to clear all filters
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedCategories([]);
@@ -213,11 +200,10 @@ const Search = () => {
       <div className="container mx-auto p-6 max-w-7xl">
         <div className="mb-6">
           <h1 className="text-3xl font-bold text-navy-600">Search Cases</h1>
-          <p className="text-muted-foreground">Find and filter through case documents and AI analysis</p>
+          <p className="text-gray-500">Find and filter through case documents and AI analysis</p>
         </div>
         
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Left sidebar with filters */}
           <div className={`${showFilters ? 'block' : 'hidden'} lg:block w-full lg:w-72 space-y-4`}>
             <Card>
               <CardHeader className="pb-3">
@@ -227,7 +213,6 @@ const Search = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-5">
-                {/* Case Categories */}
                 <div className="space-y-2">
                   <Label className="font-medium">Categories</Label>
                   <div className="space-y-1">
@@ -236,7 +221,7 @@ const Search = () => {
                         <Checkbox 
                           id={`category-${category}`} 
                           checked={selectedCategories.includes(category)}
-                          onCheckedChange={() => handleCategoryChange(category)}
+                          onChange={() => handleCategoryChange(category)}
                         />
                         <label 
                           htmlFor={`category-${category}`}
@@ -251,7 +236,6 @@ const Search = () => {
                 
                 <Separator />
                 
-                {/* Case Status */}
                 <div className="space-y-2">
                   <Label className="font-medium">Status</Label>
                   <div className="space-y-1">
@@ -260,7 +244,7 @@ const Search = () => {
                         <Checkbox 
                           id={`status-${status}`} 
                           checked={selectedStatuses.includes(status)}
-                          onCheckedChange={() => handleStatusChange(status)}
+                          onChange={() => handleStatusChange(status)}
                         />
                         <label 
                           htmlFor={`status-${status}`}
@@ -275,7 +259,6 @@ const Search = () => {
                 
                 <Separator />
                 
-                {/* Date Range */}
                 <div className="space-y-2">
                   <Label className="font-medium">Filing Date</Label>
                   <div className="space-y-2">
@@ -306,17 +289,15 @@ const Search = () => {
                 
                 <Separator />
                 
-                {/* AI Confidence Range */}
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <Label className="font-medium">AI Confidence</Label>
                     <span className="text-sm">{confidenceRange[0]}% - {confidenceRange[1]}%</span>
                   </div>
                   <Slider 
-                    defaultValue={[0, 100]} 
+                    value={confidenceRange}
                     max={100} 
                     step={1} 
-                    value={confidenceRange}
                     onValueChange={(value) => setConfidenceRange(value as [number, number])}
                     className="my-6"
                   />
@@ -324,7 +305,6 @@ const Search = () => {
                 
                 <Separator />
                 
-                {/* Tags */}
                 <div className="space-y-2">
                   <Label className="font-medium">Tags</Label>
                   <div className="space-y-1 max-h-40 overflow-y-auto">
@@ -333,7 +313,7 @@ const Search = () => {
                         <Checkbox 
                           id={`tag-${tag}`} 
                           checked={selectedTags.includes(tag)}
-                          onCheckedChange={() => handleTagChange(tag)}
+                          onChange={() => handleTagChange(tag)}
                         />
                         <label 
                           htmlFor={`tag-${tag}`}
@@ -349,14 +329,12 @@ const Search = () => {
             </Card>
           </div>
           
-          {/* Main content area */}
           <div className="flex-1 space-y-4">
-            {/* Search bar and sorting */}
             <Card>
               <CardContent className="p-4">
                 <div className="flex flex-col md:flex-row gap-4">
                   <div className="relative flex-1">
-                    <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                    <SearchIcon className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
                     <Input
                       type="search"
                       placeholder="Search cases by title, content, or tags..."
@@ -393,9 +371,8 @@ const Search = () => {
               </CardContent>
             </Card>
             
-            {/* Search summary */}
             <div className="flex justify-between items-center">
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-gray-500">
                 Showing {filteredCases.length} results
                 {searchTerm && ` for "${searchTerm}"`}
                 {(selectedCategories.length > 0 || selectedStatuses.length > 0 || selectedTags.length > 0) && " with filters applied"}
@@ -413,7 +390,6 @@ const Search = () => {
               </Button>
             </div>
             
-            {/* Active filters */}
             {(selectedCategories.length > 0 || selectedStatuses.length > 0 || selectedTags.length > 0) && (
               <div className="flex flex-wrap gap-2">
                 {selectedCategories.map((category) => (
@@ -454,7 +430,6 @@ const Search = () => {
               </div>
             )}
             
-            {/* Search results */}
             {sortedCases.length > 0 ? (
               <div className="space-y-4">
                 {sortedCases.map((caseItem) => (
@@ -474,7 +449,7 @@ const Search = () => {
                           </div>
                         </div>
                         
-                        <p className="text-sm text-muted-foreground mb-3">{caseItem.summary}</p>
+                        <p className="text-sm text-gray-500 mb-3">{caseItem.summary}</p>
                         
                         <div className="flex items-center justify-between">
                           <div className="flex flex-wrap gap-1">
@@ -491,9 +466,9 @@ const Search = () => {
                                 caseItem.confidenceScore > 90 ? 'bg-green-500' : 
                                 caseItem.confidenceScore > 80 ? 'bg-yellow-500' : 'bg-red-500'
                               }`}></span>
-                              <span className="text-muted-foreground">{caseItem.confidenceScore}%</span>
+                              <span className="text-gray-500">{caseItem.confidenceScore}%</span>
                             </div>
-                            <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                            <ArrowRight className="h-4 w-4 text-gray-500" />
                           </div>
                         </div>
                       </CardContent>
@@ -505,10 +480,10 @@ const Search = () => {
               <Card>
                 <CardContent className="p-6 text-center">
                   <div className="mb-4">
-                    <SearchIcon className="h-12 w-12 mx-auto text-muted-foreground/70" />
+                    <SearchIcon className="h-12 w-12 mx-auto text-gray-400" />
                   </div>
                   <h3 className="text-lg font-medium mb-2">No cases found</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="text-gray-500 mb-4">
                     No cases match your current search criteria. Try adjusting your filters or search terms.
                   </p>
                   <Button onClick={clearFilters}>Clear All Filters</Button>
