@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -11,7 +10,6 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Search, Filter, ArrowRight } from 'lucide-react';
 
-// Mock data for cases
 const mockCases = [
   {
     id: '1',
@@ -67,15 +65,14 @@ const mockCases = [
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('');
-  const [statusFilter, setStatusFilter] = useState('');
+  const [categoryFilter, setCategoryFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   
-  // Filter cases based on search and filters
   const filteredCases = mockCases.filter(caseItem => {
     const matchesSearch = caseItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                           caseItem.summary.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === '' || caseItem.category === categoryFilter;
-    const matchesStatus = statusFilter === '' || caseItem.status === statusFilter;
+    const matchesCategory = categoryFilter === 'all' || caseItem.category === categoryFilter;
+    const matchesStatus = statusFilter === 'all' || caseItem.status === statusFilter;
     
     return matchesSearch && matchesCategory && matchesStatus;
   });
@@ -130,7 +127,7 @@ const Index = () => {
                         <SelectValue placeholder="Category" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Categories</SelectItem>
+                        <SelectItem value="all">All Categories</SelectItem>
                         <SelectItem value="Criminal">Criminal</SelectItem>
                         <SelectItem value="Corporate">Corporate</SelectItem>
                         <SelectItem value="Family">Family</SelectItem>
@@ -144,7 +141,7 @@ const Index = () => {
                         <SelectValue placeholder="Status" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">All Statuses</SelectItem>
+                        <SelectItem value="all">All Statuses</SelectItem>
                         <SelectItem value="Ongoing">Ongoing</SelectItem>
                         <SelectItem value="Closed">Closed</SelectItem>
                       </SelectContent>
