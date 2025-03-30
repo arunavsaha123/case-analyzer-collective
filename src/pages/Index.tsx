@@ -1,281 +1,169 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { MainLayout } from '@/components/layout/MainLayout';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/custom-ui/Card';
-import { Button } from '@/components/custom-ui/Button';
-import { Input } from '@/components/custom-ui/Input';
-import { Badge } from '@/components/custom-ui/Badge';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/custom-ui/Select';
-import { Search, Filter, ArrowRight } from 'lucide-react';
 
-const mockCases = [
-  {
-    id: '1',
-    title: 'State vs. Johnson',
-    category: 'Criminal',
-    date: '2023-05-10',
-    status: 'Ongoing',
-    confidenceScore: 92,
-    summary: 'Defendant charged with aggravated assault and battery following an incident at a local bar.',
-    tags: ['Criminal', 'Assault', 'Battery'],
-  },
-  {
-    id: '2',
-    title: 'Smith Corp. vs. Tech Innovations Inc.',
-    category: 'Corporate',
-    date: '2022-11-22',
-    status: 'Closed',
-    confidenceScore: 87,
-    summary: 'Patent infringement case regarding smartphone technology. Settlement reached outside of court.',
-    tags: ['Corporate', 'Patent', 'Settlement'],
-  },
-  {
-    id: '3',
-    title: 'Davis Family Trust',
-    category: 'Family',
-    date: '2023-07-15',
-    status: 'Ongoing',
-    confidenceScore: 95,
-    summary: 'Dispute over inheritance and distribution of family assets following the death of the primary benefactor.',
-    tags: ['Family', 'Trust', 'Estate'],
-  },
-  {
-    id: '4',
-    title: 'City of Springfield vs. Martinez',
-    category: 'Municipal',
-    date: '2023-02-28',
-    status: 'Closed',
-    confidenceScore: 90,
-    summary: 'Zoning violation case. Property owner fined for unauthorized commercial activities in residential zone.',
-    tags: ['Municipal', 'Zoning', 'Fine'],
-  },
-  {
-    id: '5',
-    title: 'Williams Healthcare Malpractice',
-    category: 'Medical',
-    date: '2023-09-01',
-    status: 'Ongoing',
-    confidenceScore: 76,
-    summary: 'Medical malpractice suit alleging negligence during routine surgery resulting in complications.',
-    tags: ['Medical', 'Malpractice', 'Negligence'],
-  },
-];
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button } from '../components/custom-ui/Button';
+import { Input } from '../components/custom-ui/Input';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/custom-ui/Card';
+import { Select, SelectTrigger, SelectContent, SelectItem, SelectValue } from '../components/custom-ui/Select';
+import { BarChart4, FileSearch, Users, Upload } from 'lucide-react';
 
 const Index = () => {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
-  const [activeTab, setActiveTab] = useState('public');
-  
-  const filteredCases = mockCases.filter(caseItem => {
-    const matchesSearch = caseItem.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          caseItem.summary.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = categoryFilter === 'all' || caseItem.category === categoryFilter;
-    const matchesStatus = statusFilter === 'all' || caseItem.status === statusFilter;
-    
-    return matchesSearch && matchesCategory && matchesStatus;
-  });
-  
-  return (
-    <MainLayout>
-      <div className="container mx-auto p-6 max-w-7xl">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold text-navy-600">Case Analyzer Collective</h1>
-            <p className="text-gray-500">Search, analyze, and collaborate on legal cases</p>
-          </div>
-          <div className="flex gap-2">
-            <Link to="/upload">
-              <Button>Upload New Case</Button>
-            </Link>
-            <Link to="/groups">
-              <Button variant="outline">Create Group</Button>
-            </Link>
-          </div>
-        </div>
+  const navigate = useNavigate();
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedStatus, setSelectedStatus] = useState('all');
 
-        <div className="mb-8">
-          <div className="flex border-b border-gray-200">
-            <button 
-              onClick={() => setActiveTab('public')}
-              className={`px-4 py-2 font-medium text-sm ${
-                activeTab === 'public' 
-                  ? 'text-blue-600 border-b-2 border-blue-600' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Public Cases
-            </button>
-            <button 
-              onClick={() => setActiveTab('my-cases')}
-              className={`px-4 py-2 font-medium text-sm ${
-                activeTab === 'my-cases' 
-                  ? 'text-blue-600 border-b-2 border-blue-600' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              My Cases
-            </button>
-            <button 
-              onClick={() => setActiveTab('shared')}
-              className={`px-4 py-2 font-medium text-sm ${
-                activeTab === 'shared' 
-                  ? 'text-blue-600 border-b-2 border-blue-600' 
-                  : 'text-gray-500 hover:text-gray-700'
-              }`}
-            >
-              Shared With Me
-            </button>
-          </div>
-          
-          <div className="mt-6">
-            {activeTab === 'public' && (
-              <div className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Search Public Cases</CardTitle>
-                    <CardDescription>Browse through publicly available case documents and analysis</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="flex flex-col md:flex-row gap-4">
-                      <div className="relative flex-1">
-                        <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-                        <Input
-                          type="search"
-                          placeholder="Search cases..."
-                          className="pl-8"
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                      </div>
-                      
-                      <div className="flex gap-2">
-                        <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-                          <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Category" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All Categories</SelectItem>
-                            <SelectItem value="Criminal">Criminal</SelectItem>
-                            <SelectItem value="Corporate">Corporate</SelectItem>
-                            <SelectItem value="Family">Family</SelectItem>
-                            <SelectItem value="Municipal">Municipal</SelectItem>
-                            <SelectItem value="Medical">Medical</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        
-                        <Select value={statusFilter} onValueChange={setStatusFilter}>
-                          <SelectTrigger className="w-[180px]">
-                            <SelectValue placeholder="Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="all">All Statuses</SelectItem>
-                            <SelectItem value="Ongoing">Ongoing</SelectItem>
-                            <SelectItem value="Closed">Closed</SelectItem>
-                          </SelectContent>
-                        </Select>
-                        
-                        <Button variant="outline" size="icon">
-                          <Filter className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-                
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {filteredCases.map((caseItem) => (
-                    <Link to={`/cases/${caseItem.id}`} key={caseItem.id}>
-                      <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
-                        <CardHeader>
-                          <div className="flex justify-between">
-                            <Badge variant={caseItem.status === 'Ongoing' ? 'default' : 'secondary'}>
-                              {caseItem.status}
-                            </Badge>
-                            <span className="text-sm text-muted-foreground">{caseItem.date}</span>
-                          </div>
-                          <CardTitle className="mt-2">{caseItem.title}</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <p className="text-sm text-muted-foreground line-clamp-3">{caseItem.summary}</p>
-                          <div className="flex flex-wrap gap-1 mt-3">
-                            {caseItem.tags.map((tag, i) => (
-                              <Badge key={i} variant="outline" className="text-xs">
-                                {tag}
-                              </Badge>
-                            ))}
-                          </div>
-                        </CardContent>
-                        <CardFooter className="flex justify-between border-t pt-4 text-sm">
-                          <div className="flex items-center gap-1">
-                            <span className={`inline-block w-3 h-3 rounded-full ${
-                              caseItem.confidenceScore > 90 ? 'bg-green-500' : 
-                              caseItem.confidenceScore > 80 ? 'bg-yellow-500' : 'bg-red-500'
-                            }`}></span>
-                            <span>AI Confidence: {caseItem.confidenceScore}%</span>
-                          </div>
-                          <span className="flex items-center">
-                            View Case <ArrowRight className="ml-1 h-4 w-4" />
-                          </span>
-                        </CardFooter>
-                      </Card>
-                    </Link>
-                  ))}
-                </div>
-                
-                {filteredCases.length === 0 && (
-                  <div className="text-center py-10">
-                    <p className="text-gray-500">No cases found matching your search criteria.</p>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {activeTab === 'my-cases' && (
-              <Card className="flex items-center justify-center h-64">
-                <CardContent className="text-center">
-                  <p className="text-gray-500 mb-4">You need to log in to view your cases</p>
-                  <Link to="/auth">
-                    <Button>Log In</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
-            
-            {activeTab === 'shared' && (
-              <Card className="flex items-center justify-center h-64">
-                <CardContent className="text-center">
-                  <p className="text-gray-500 mb-4">You need to log in to view shared cases</p>
-                  <Link to="/auth">
-                    <Button>Log In</Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            )}
-          </div>
-        </div>
-        
-        <div className="space-y-6">
-          <h2 className="text-2xl font-bold">Featured Analysis</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {mockCases.slice(0, 4).map((caseItem) => (
-              <Card key={`featured-${caseItem.id}`} className="hover:shadow-md transition-shadow">
-                <CardHeader className="p-4">
-                  <CardTitle className="text-base">{caseItem.title}</CardTitle>
-                  <CardDescription className="text-xs">{caseItem.category}</CardDescription>
-                </CardHeader>
-                <CardFooter className="p-4 pt-0 flex justify-between text-sm">
-                  <Badge variant="outline">{caseItem.status}</Badge>
-                  <Link to={`/cases/${caseItem.id}`} className="text-primary flex items-center">
-                    View <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </CardFooter>
-              </Card>
-            ))}
-          </div>
-        </div>
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    navigate('/search');
+  };
+
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <div className="text-center mb-8">
+        <h1 className="text-3xl font-bold mb-2">Legal Case Management Dashboard</h1>
+        <p className="text-gray-600 max-w-2xl mx-auto">
+          Search, manage, and analyze your legal cases all in one place. Get started by searching for a case or accessing one of the quick links below.
+        </p>
       </div>
-    </MainLayout>
+
+      <Card className="mb-8">
+        <CardContent className="pt-6">
+          <form onSubmit={handleSearch} className="space-y-4">
+            <div className="grid gap-4 md:grid-cols-3">
+              <div className="md:col-span-3">
+                <Input
+                  type="text"
+                  placeholder="Search by case name, number, or client..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
+              </div>
+              
+              <div>
+                <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Category" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Categories</SelectItem>
+                    <SelectItem value="civil">Civil Law</SelectItem>
+                    <SelectItem value="criminal">Criminal Law</SelectItem>
+                    <SelectItem value="family">Family Law</SelectItem>
+                    <SelectItem value="corporate">Corporate Law</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Select value={selectedStatus} onValueChange={setSelectedStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">All Statuses</SelectItem>
+                    <SelectItem value="active">Active</SelectItem>
+                    <SelectItem value="pending">Pending</SelectItem>
+                    <SelectItem value="closed">Closed</SelectItem>
+                    <SelectItem value="archived">Archived</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <div>
+                <Button type="submit" className="w-full">
+                  <FileSearch className="mr-2 h-4 w-4" />
+                  Search Cases
+                </Button>
+              </div>
+            </div>
+          </form>
+        </CardContent>
+      </Card>
+
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {/* Quick Access Cards */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <FileSearch className="h-5 w-5 mr-2" />
+              Recent Cases
+            </CardTitle>
+            <CardDescription>Access your recently viewed cases</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-2">
+              <li className="p-2 hover:bg-gray-50 rounded">
+                <a href="#" className="text-blue-600 hover:underline">Smith vs Johnson (Case #12345)</a>
+                <p className="text-sm text-gray-500">Last viewed: 3 hours ago</p>
+              </li>
+              <li className="p-2 hover:bg-gray-50 rounded">
+                <a href="#" className="text-blue-600 hover:underline">Garcia Estate Planning (Case #67890)</a>
+                <p className="text-sm text-gray-500">Last viewed: Yesterday</p>
+              </li>
+              <li className="p-2 hover:bg-gray-50 rounded">
+                <a href="#" className="text-blue-600 hover:underline">Taylor Custody Hearing (Case #54321)</a>
+                <p className="text-sm text-gray-500">Last viewed: 3 days ago</p>
+              </li>
+            </ul>
+            <Button variant="outline" className="w-full mt-4">
+              View All Recent Cases
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Upload className="h-5 w-5 mr-2" />
+              Upload Documents
+            </CardTitle>
+            <CardDescription>Add files to existing cases or create new ones</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-gray-600">
+              Quickly upload and organize case documents, evidence, or client communications.
+            </p>
+            <Button onClick={() => navigate('/upload')} className="w-full">
+              <Upload className="mr-2 h-4 w-4" />
+              Upload Files
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <Users className="h-5 w-5 mr-2" />
+              Client Portal
+            </CardTitle>
+            <CardDescription>Manage client access and communications</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="mb-4 text-gray-600">
+              Share documents, updates, and information securely with your clients.
+            </p>
+            <Button onClick={() => navigate('/groups')} variant="outline" className="w-full">
+              <Users className="mr-2 h-4 w-4" />
+              Manage Clients
+            </Button>
+          </CardContent>
+        </Card>
+
+        <Card className="md:col-span-2 lg:col-span-3">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <BarChart4 className="h-5 w-5 mr-2" />
+              Performance Overview
+            </CardTitle>
+            <CardDescription>Case statistics and productivity metrics</CardDescription>
+          </CardHeader>
+          <CardContent className="h-80 flex items-center justify-center bg-gray-50">
+            <p className="text-gray-500">Chart visualization would appear here</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
   );
 };
 
