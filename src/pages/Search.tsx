@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,7 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Slider } from '@/components/ui/slider';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
-import { ArrowRight, ChevronDown, ChevronUp, Search as SearchIcon, Calendar, Filter, SlidersHorizontal } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronUp, Search as SearchIcon, Calendar, Filter, SlidersHorizontal, XCircle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 // Mock data
@@ -425,7 +424,7 @@ const Search = () => {
                     onClick={() => handleCategoryChange(category)}
                   >
                     Category: {category}
-                    <X className="h-3 w-3" />
+                    <XCircle className="h-4 w-4" />
                   </Badge>
                 ))}
                 
@@ -437,7 +436,7 @@ const Search = () => {
                     onClick={() => handleStatusChange(status)}
                   >
                     Status: {status}
-                    <X className="h-3 w-3" />
+                    <XCircle className="h-4 w-4" />
                   </Badge>
                 ))}
                 
@@ -449,7 +448,7 @@ const Search = () => {
                     onClick={() => handleTagChange(tag)}
                   >
                     Tag: {tag}
-                    <X className="h-3 w-3" />
+                    <XCircle className="h-4 w-4" />
                   </Badge>
                 ))}
               </div>

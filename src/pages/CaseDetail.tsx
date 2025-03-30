@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MainLayout } from '@/components/layout/MainLayout';
@@ -31,7 +30,6 @@ import {
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock data for a specific case
 const mockCase = {
   id: '1',
   title: 'State vs. Johnson',
@@ -78,7 +76,6 @@ const CaseDetail = () => {
   const [newComment, setNewComment] = useState('');
   const [correctionText, setCorrectionText] = useState('');
   
-  // This would be a real function in a production app
   const handleDownloadPdf = () => {
     toast({
       title: "Starting download",
@@ -172,7 +169,6 @@ const CaseDetail = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-6">
-          {/* Main content area */}
           <div className="flex-1 space-y-6">
             <Card>
               <CardHeader>
@@ -191,10 +187,6 @@ const CaseDetail = () => {
                   <Progress 
                     value={mockCase.confidenceScore} 
                     className="w-32 h-2"
-                    indicatorClassName={
-                      mockCase.confidenceScore > 90 ? "bg-green-500" : 
-                      mockCase.confidenceScore > 80 ? "bg-yellow-500" : "bg-red-500"
-                    }
                   />
                 </div>
                 
@@ -422,7 +414,6 @@ const CaseDetail = () => {
             </Tabs>
           </div>
 
-          {/* Sidebar */}
           <div className="w-full lg:w-80 space-y-4">
             <Card>
               <CardHeader>

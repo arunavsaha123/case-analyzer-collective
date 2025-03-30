@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { MainLayout } from '@/components/layout/MainLayout';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,10 +11,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useToast } from '@/hooks/use-toast';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { ArrowRight, Folder, MessagesSquare, Send, FilePlus2, Bot, Sparkles, Download, Robot, User, Ban } from 'lucide-react';
+import { ArrowRight, Folder, MessagesSquare, Send, FilePlus2, Bot, Sparkles, Download, User, Ban } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-// Mock data for chat conversations
 const mockChatData = {
   conversationId: 'c1',
   title: 'State vs. Johnson',
@@ -57,7 +55,6 @@ const mockChatData = {
   status: 'active',
 };
 
-// Mock data for chat history
 const mockChatHistory = [
   {
     id: 'c1',
@@ -82,7 +79,6 @@ const mockChatHistory = [
   },
 ];
 
-// Mock data for available cases
 const mockAvailableCases = [
   { id: '1', title: 'State vs. Johnson', category: 'Criminal' },
   { id: '2', title: 'Smith Corp. vs. Tech Innovations Inc.', category: 'Corporate' },
@@ -101,7 +97,6 @@ const Chat = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [isTyping, setIsTyping] = useState(false);
   
-  // Scroll to bottom when messages change
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -113,7 +108,6 @@ const Chat = () => {
     
     if (!message.trim()) return;
     
-    // Simulate adding user message
     const newUserMessage = {
       id: `m${Date.now()}`,
       sender: 'user',
@@ -122,19 +116,15 @@ const Chat = () => {
     };
     
     if (currentChat) {
-      // Add user message
       setCurrentChat({
         ...currentChat,
         messages: [...currentChat.messages, newUserMessage as any]
       });
       
-      // Simulate AI typing
       setIsTyping(true);
       
-      // Clear input
       setMessage('');
       
-      // Simulate AI response after delay
       setTimeout(() => {
         setIsTyping(false);
         
@@ -203,7 +193,6 @@ const Chat = () => {
     <MainLayout>
       <div className="container mx-auto p-6 max-w-7xl h-[calc(100vh-8rem)]">
         <div className="flex h-full gap-4">
-          {/* Left sidebar with chat history */}
           <div className="hidden md:block w-64 h-full flex-shrink-0">
             <Card className="h-full flex flex-col">
               <CardHeader className="py-4">
@@ -256,7 +245,6 @@ const Chat = () => {
             </Card>
           </div>
           
-          {/* Main chat area */}
           <div className="flex-1 flex flex-col h-full">
             {isCreatingNew ? (
               <Card className="h-full flex flex-col">
@@ -383,7 +371,7 @@ const Chat = () => {
                               ) : (
                                 <Avatar className="h-6 w-6">
                                   <AvatarFallback className="bg-secondary text-white text-xs">
-                                    <Robot className="h-3 w-3" />
+                                    <Bot className="h-3 w-3" />
                                   </AvatarFallback>
                                 </Avatar>
                               )}
@@ -416,7 +404,7 @@ const Chat = () => {
                             <div className="flex items-center gap-2 mb-1">
                               <Avatar className="h-6 w-6">
                                 <AvatarFallback className="bg-secondary text-white text-xs">
-                                  <Robot className="h-3 w-3" />
+                                  <Bot className="h-3 w-3" />
                                 </AvatarFallback>
                               </Avatar>
                               <span className="text-xs font-medium">AI Assistant</span>
